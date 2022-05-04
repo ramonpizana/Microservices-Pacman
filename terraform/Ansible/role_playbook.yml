@@ -1,8 +1,17 @@
 ---
-- name: Install Apache
-  hosts: all
-  remote_user: azureuser
+- hosts: all
   become: yes
-
+  remote_user: azureuser
+  become_user: root
+  become_method: sudo
   roles:
-      - apache
+    - vault
+
+- hosts: all
+  vars:
+    unseal_keys_dir_output: "{{ playbook_dir }}/unsealKey/"
+    root_token_dir_output: "{{ playbook_dir }}/rootKey/"
+  roles:
+    - vault-init
+    - vault-unseal
+    
