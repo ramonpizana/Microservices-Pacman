@@ -1,5 +1,5 @@
 resource "azurerm_kubernetes_cluster" "cluster" {
-  name                = "pacman-cluster-aks1"
+  name                = "pacman-cluster-aks"
   location            = "centralus"
   resource_group_name = "${var.resource_group}"
   dns_prefix          = "clusteraks1"
