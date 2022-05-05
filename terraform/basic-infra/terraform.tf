@@ -3,9 +3,11 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~>2.0"
+      version = "~> 3.1.0"
     }
   }
+
+  
   backend "azurerm" {
     resource_group_name  = "ramon-pizana"
     storage_account_name = "storagepacman29"
