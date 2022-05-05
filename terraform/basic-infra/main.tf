@@ -2,10 +2,18 @@ module "rg" {
   source = "./modules/rg"
 }
 
+# Azure Container Registry 
 module "azureregistry" {
   source         = "./modules/acr"
   resource_group = module.rg.resource_group
   location       = module.rg.location
+}
+
+# Cluster Kubernetes
+module "cluster" {
+  source              = "./modules/cluster"
+  resource_group      = module.rg.resource_group
+  location            = module.rg.location
 }
 
 module "network" {
