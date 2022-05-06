@@ -1,5 +1,11 @@
 name: Docker Builds
-on: [push]
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Reason'
+        required: true
+        default: 'Disaster recovery'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -40,10 +46,11 @@ jobs:
 
     - name: Delete image
       run: |
-          az acr repository delete --name ${{ env.ACR_NAME }} --image ${{ env.ACR_SERVER_LOGIN }}/pacman-nodejs-app:latest --yes 
+          az acr repository delete --name ${{ env.ACR_NAME }} --image ${{ env.ACR_SERVER_LOGIN }}/pacman-nodejs-app:v1 --yes 
       continue-on-error: true
 
     - name: docker build pacman
       run: |
-        docker build . -t ${{ env.ACR_SERVER_LOGIN }}/pacman-nodejs-app:latest -f ./pacman-nodejs-app/docker/Dockerfile
-        docker push ${{ env.ACR_SERVER_LOGIN }}/pacman-nodejs-app:latest
+        cd pacman-nodejs-app/docker/
+        docker build -t ${{ env.ACR_SERVER_LOGIN }}/pacman-nodejs-app:v1 .
+        docker push ${{ env.ACR_SERVER_LOGIN }}/pacman-nodejs-app:v1 
