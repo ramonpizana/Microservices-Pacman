@@ -5,18 +5,41 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: docker login
-      env:
-        DOCKER_USER: ${{secrets.DOCKER_USER}}
-        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-        DOCKER_SERVER: ${{secrets.DOCKER_SERVER}}
-      run: |
-        docker login $DOCKER_SERVER -u $DOCKER_USER -p $DOCKER_PASSWORD
+
+    - name: Import Secrets
+        uses: hashicorp/vault-action@v2.0.1
+        with:
+          url: http://pacmanapptm.eastus.cloudapp.azure.com:8200/
+          token: ${{ secrets.VAULT_TOKEN_GH }}
+          tlsSkipVerify: true
+          secrets: |
+            secret/ci ARM_SUBSCRIPTION_ID ;
+            secret/ci AZURE_LOGIN ;
+            secret/ci AZURE_SECRET ;
+            secret/ci ACR_USERNAME ;
+            secret/ci ACR_PASSWORD ;
+            secret/ci RESOURCE_GROUP ;
+            secret/ci ACR_NAME ;
+            secret/ci CLUSTER_NAME ;
+            secret/ci ACR_SERVER_LOGIN ;
+          
+    - name: "Login to Azure CLI"
+        run: |
+          az login -u ${{ env.AZURE_LOGIN }} -p ${{ env.AZURE_SECRET }}
+
+    - name: Login to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.ACR_SERVER_LOGIN }}
+          username: ${{ env.ACR_USERNAME  }}
+          password: ${{ env.ACR_PASSWORD  }}
+
+    - name: Delete image
+        run: |
+          az acr repository delete --name ${{ env.ACR_NAME }} --image ${{ ACR_SERVER_LOGIN }}/pacman-nodejs-app:latest --yes
+        continue-on-error: true
+
     - name: docker build pacman
       run: |
-        docker build . -t oscgm/pacman-nodejs-app:latest -f ./pacman-nodejs-app/docker/Dockerfile
-        docker images
-    - name: docker push
-      run: |
-        docker tag oscgm/pacman-nodejs-app:latest $DOCKER_SERVER/pacman-nodejs-app
-        docker push $DOCKER_SERVER/pacman-nodejs-app
+        docker build . -t ${{ ACR_SERVER_LOGIN }}/pacman-nodejs-app:latest -f ./pacman-nodejs-app/docker/Dockerfile
+        docker push ${{ ACR_SERVER_LOGIN }}/pacman-nodejs-app:latest
