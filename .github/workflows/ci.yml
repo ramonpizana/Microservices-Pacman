@@ -1,0 +1,10 @@
+name: Docker Builds
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: docker build pacman
+      run: |
+        docker build ./pacman-nodejs-app/docker -t oscgm/pacman-nodejs-app:latest .
