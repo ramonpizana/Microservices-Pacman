@@ -5,6 +5,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: docker login
+      env:
+        DOCKER_USER: ${{secrets.DOCKER_USER}}
+        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        DOCKER_SERVER: ${{secrets.DOCKER_SERVER}}
+      run: |
+        docker login $DOCKER_SERVER -u DOCKER_USER -p DOCKER_PASSWORD
     - name: docker build pacman
       run: |
         docker build . -t oscgm/pacman-nodejs-app:latest -f ./pacman-nodejs-app/docker/Dockerfile
+        docker images
+    - name: docker push
+      run: |
+        docker tag oscgm/pacman-nodejs-app:latest $DOCKER_SERVER/pacman-nodejs-app
+        docker push $DOCKER_SERVER/pacman-nodejs-app
