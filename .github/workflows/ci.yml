@@ -11,7 +11,7 @@ jobs:
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
         DOCKER_SERVER: ${{secrets.DOCKER_SERVER}}
       run: |
-        docker login $DOCKER_SERVER -u DOCKER_USER -p DOCKER_PASSWORD
+        docker login $DOCKER_SERVER -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name: docker build pacman
       run: |
         docker build . -t oscgm/pacman-nodejs-app:latest -f ./pacman-nodejs-app/docker/Dockerfile
