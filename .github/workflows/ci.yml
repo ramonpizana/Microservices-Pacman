@@ -7,4 +7,4 @@ jobs:
     - uses: actions/checkout@v2
     - name: docker build pacman
       run: |
-        docker build -t oscgm/pacman-nodejs-app:latest .
+        docker build . -t oscgm/pacman-nodejs-app:latest -f ./pacman-nodejs-app/docker/Dockerfile
