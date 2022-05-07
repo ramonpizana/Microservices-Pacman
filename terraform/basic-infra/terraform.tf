@@ -7,7 +7,7 @@ terraform {
     }
   }
 
-  
+
   backend "azurerm" {
     resource_group_name  = "ramon-pizana"
     storage_account_name = "storagepacman29"
