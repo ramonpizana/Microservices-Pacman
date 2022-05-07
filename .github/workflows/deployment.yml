@@ -32,7 +32,6 @@ jobs:
             secret/ci ACR_NAME ;
             secret/ci CLUSTER_NAME ;
             secret/ci ACR_SERVER_LOGIN ;
-            secret/ci 
           
     - name: "Login to Azure CLI"
       run: |
