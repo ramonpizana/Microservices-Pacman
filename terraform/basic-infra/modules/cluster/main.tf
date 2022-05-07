@@ -1,8 +1,8 @@
 resource "azurerm_kubernetes_cluster" "cluster" {
-  name                = "pacman-cluster-aks1"
+  name                = "pacman-cluster-aks"
   location            = "eastus"
   resource_group_name = "${var.resource_group}"
-  dns_prefix          = "clusteraks2"
+  dns_prefix          = "clusteraks"
 
   default_node_pool {
     name       = "default"

@@ -11,9 +11,9 @@ module "azureregistry" {
 
 # Cluster Kubernetes
 module "cluster" {
-  source              = "./modules/cluster"
-  resource_group      = module.rg.resource_group
-  location            = module.rg.location
+  source         = "./modules/cluster"
+  resource_group = module.rg.resource_group
+  location       = module.rg.location
 }
 
 # Network
