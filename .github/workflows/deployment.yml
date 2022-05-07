@@ -1,0 +1,51 @@
+name: Deployment
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Reason'
+        required: true
+        default: 'Disaster recovery'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: ACTIONS_ALLOW_UNSECURE_COMMANDS
+      id: ACTIONS_ALLOW_UNSECURE_COMMANDS
+      run: echo 'ACTIONS_ALLOW_UNSECURE_COMMANDS=true' >> $GITHUB_ENV
+
+    - name: Import Secrets
+      uses: hashicorp/vault-action@v2.0.1
+      with:
+          url: http://pacmantmapp.eastus.cloudapp.azure.com:8200/
+          token: ${{ secrets.VAULT_TOKEN_GH }}
+          tlsSkipVerify: true
+          secrets: |
+            secret/ci ARM_SUBSCRIPTION_ID ;
+            secret/ci AZURE_LOGIN ;
+            secret/ci AZURE_SECRET ;
+            secret/ci ACR_USERNAME ;
+            secret/ci ACR_PASSWORD ;
+            secret/ci RESOURCE_GROUP ;
+            secret/ci ACR_NAME ;
+            secret/ci CLUSTER_NAME ;
+            secret/ci ACR_SERVER_LOGIN ;
+          
+    - name: "Login to Azure CLI"
+      run: |
+          az login -u ${{ env.AZURE_LOGIN }} -p ${{ env.AZURE_SECRET }}
+
+    - name: Login to ACR
+      uses: azure/docker-login@v1
+      with:
+          login-server: ${{ env.ACR_SERVER_LOGIN }}
+          username: ${{ env.ACR_USERNAME  }}
+          password: ${{ env.ACR_PASSWORD  }}
+
+    - name: Helm install
+      run: |
+        kubectl create namespace pacman
+        helm repo add veducate https://saintdle.github.io/helm-charts/
+        helm install pacman veducate/pacman -n pacman
