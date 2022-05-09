@@ -7,7 +7,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # Clone game source code
-RUN sudo rm -r pacman
+#UN sudo rm -r pacman
 RUN git clone https://github.com/ramonpizana/pacman .
 
 # Install app dependencies
