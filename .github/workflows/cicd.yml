@@ -1,4 +1,4 @@
-name: ci/cd test
+name: ci/cd test1
 on:
   workflow_dispatch:
     inputs:
