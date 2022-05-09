@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 RUN git clone https://github.com/font/pacman.git .
 
 # Install app dependencies
-RUN npm install
+RUN npm install pug --save 
 
 # Expose port 8080
 EXPOSE 8080
