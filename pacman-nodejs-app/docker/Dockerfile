@@ -7,11 +7,12 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # Clone game source code
-RUN git clone https://github.com/font/pacman.git .
+RUN sudo rm -r pacman
+RUN git clone https://github.com/ramonpizana/pacman .
 
 # Install app dependencies
 RUN rm -rf node_modules
-RUN npm install pug --force --save --legacy-peer-deps
+RUN npm install pug --save --legacy-peer-deps
 
 # Expose port 8080
 EXPOSE 8080
